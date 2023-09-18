@@ -1,18 +1,10 @@
 "use client";
 
+import Utilisateur from "@/components/Utilisateur";
 import { Skeleton } from "@mui/material";
 import { useState } from "react";
 
-export interface utilisateur {
-  nom: string;
-  prenom: string;
-  image: string | undefined;
-  telephone: string;
-  email: string;
-  adresse: string;
-}
-
-const utilisateurExample: utilisateur = {
+const utilisateurExample: Utilisateur = {
   nom: "Doe",
   prenom: "John",
   image: undefined,
@@ -23,7 +15,7 @@ const utilisateurExample: utilisateur = {
 
 const ProfilePage = () => {
   const [utilisateur, setUtilisateur] =
-    useState<utilisateur>(utilisateurExample);
+    useState<Utilisateur>(utilisateurExample);
 
   return (
     <main>

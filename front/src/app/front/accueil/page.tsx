@@ -38,7 +38,7 @@ const AccueilPage = () => {
       </div>
       <input
         type="text"
-        placeholder="Recher un plat"
+        placeholder="Rechercher un plat"
         className="w-full bg-gray-200 rounded-full border-none px-4 py-2 mb-4"
         value={filter}
         onChange={(e) => {
