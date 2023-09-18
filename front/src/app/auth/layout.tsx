@@ -1,3 +1,4 @@
+import HomeLayout from "@/components/AppLayout";
 import { ReactNode } from "react";
 
 interface Props {
@@ -7,7 +8,9 @@ interface Props {
 const AuthLayout = ({ children }: Props) => {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        <HomeLayout>{children}</HomeLayout>
+      </body>
     </html>
   );
 };

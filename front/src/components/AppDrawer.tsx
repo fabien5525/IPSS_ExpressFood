@@ -2,6 +2,8 @@
 
 import { SwipeableDrawer } from "@mui/material";
 import { Box } from "@mui/system";
+import { useRouter } from "next/navigation";
+import { set } from "zod";
 
 interface AppDrawerProps {
   open: boolean;
@@ -10,6 +12,8 @@ interface AppDrawerProps {
 
 const AppDrawer = (props: AppDrawerProps) => {
   const { open, setOpen } = props;
+  const router = useRouter();
+
   return (
     <SwipeableDrawer
       anchor={"left"}
@@ -25,10 +29,22 @@ const AppDrawer = (props: AppDrawerProps) => {
         <p className="m-8">
           Express <b>Food</b>
         </p>
-        <button className="bg-black text-white px-6 py-4 w-full rounded mb-4">
+        <button
+          className="bg-black text-white px-6 py-4 w-full rounded mb-4"
+          onClick={() => {
+            router.push("/auth/inscription");
+            setOpen(false);
+          }}
+        >
           Inscripton
         </button>
-        <button className="bg-gray-100 text-black px-6 py-4 w-full rounded mb-4">
+        <button
+          className="bg-gray-200 text-black px-6 py-4 w-full rounded mb-4"
+          onClick={() => {
+            router.push("/auth/connexion");
+            setOpen(false);
+          }}
+        >
           Connexion
         </button>
       </Box>

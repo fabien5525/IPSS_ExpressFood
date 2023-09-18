@@ -12,12 +12,12 @@ interface FrontLayoutProps {
 }
 
 export type pages = "home" | "history" | "account";
-export type pagesTranslated = "acceuil" | "historique" | "profil";
+export type pagesTranslated = "accueil" | "historique" | "profil";
 
 const translatePage = (page: pages): pagesTranslated => {
   switch (page) {
     case "home":
-      return "acceuil";
+      return "accueil";
     case "history":
       return "historique";
     case "account":
@@ -27,7 +27,7 @@ const translatePage = (page: pages): pagesTranslated => {
 
 const unTransaltePage = (page: pagesTranslated): pages => {
   switch (page) {
-    case "acceuil":
+    case "accueil":
       return "home";
     case "historique":
       return "history";
