@@ -124,13 +124,13 @@ def getPlatduJour(request):
     return Response(serializer.data)
 
 @api_view(['PUT'])
-def updatePlatduJour(request, pk):
+def updatePlatduJour(request, id):
 
     platCollection = db['Plat']
-    plat = platCollection.find_one({'id': pk})
+    plat = platCollection.find_one({'id': id})
     plat['dujour'] = not plat.get('dujour', False)
-    platCollection.update_one({'id': pk}, {'$set': {'dujour': plat['dujour']}})
-    updated_plat = platCollection.find_one({'id': pk})
+    platCollection.update_one({'id': id}, {'$set': {'dujour': plat['dujour']}})
+    updated_plat = platCollection.find_one({'id': id})
     serializer = PlatSerializer(updated_plat, many=False)
 
     return Response(serializer.data)
@@ -168,11 +168,11 @@ def SearchPlat(request, nom):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def detailLivreur(request, pk):
+def detailLivreur(request, id):
     livreurCollection = db['Livreur']
     users_collection = db['Utilisateur']
 
-    livreur = livreurCollection.find_one({'id': pk})
+    livreur = livreurCollection.find_one({'id': id})
     
     user_id = livreur.get('id_user')
     user = users_collection.find_one({'id': user_id})
@@ -189,9 +189,9 @@ def detailLivreur(request, pk):
 
 
 @api_view(['GET'])
-def detailUtilisateur(request, pk):
+def detailUtilisateur(request, id):
     userCollection = db['Utilisateur']
     
-    user = userCollection.find_one({'id': pk})
+    user = userCollection.find_one({'id': id})
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
