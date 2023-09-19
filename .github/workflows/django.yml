@@ -28,8 +28,3 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
-    - name: Start App
-      working-directory: ./project
-      run: |
-        python manage.py runserver
