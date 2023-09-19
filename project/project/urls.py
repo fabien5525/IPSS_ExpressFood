@@ -31,6 +31,7 @@ urlpatterns = [
 
     path('detailLivreur/<int:id>', views.detailLivreur, name='detailLivreur'),
     path('detailUtilisateur/<int:id>', views.detailUtilisateur, name='detailUtilisateur'),
+    # path('token', views.token, name='testoken'),
     # path('api/', include(router.urls)),
     # path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

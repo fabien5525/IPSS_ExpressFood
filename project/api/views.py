@@ -195,3 +195,21 @@ def detailUtilisateur(request, id):
     user = userCollection.find_one({'id': id})
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
+
+# @api_view(['GET'])
+# def token(request):
+#     usercollection = db['Utilisateur']
+#     user = usercollection.find_one({'id': 1})
+#     token = generate_jwt_token(user["_id"])
+#     print(token)
+#     token = Token.objects.create(user=request.user)
+#     return Response({'token': token.key})
+
+# def generate_jwt_token(user_id):
+#     secret_key = 'votre_clé_secrète'  # Remplacez par votre clé secrète
+#     token_payload = {
+#         'user_id': user_id,
+#         'exp': datetime.utcnow() + datetime.timedelta(hours=1)  # Durée de validité du token (1 heure dans cet exemple)
+#     }
+#     token = jwt.encode(token_payload, secret_key, algorithm='HS256')
+#     return token

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Plat,User,Livreur,Commande
+from api.models import Plat,User,Livreur,Commande,UserPassword
 
 # class PersonneSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -62,7 +62,7 @@ from hashlib import sha256
 
 class UserEtMdpSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = UserPassword
         fields = ['id', 'nom', 'prenom', 'adresse', 'mail', 'photo', 'tel', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
