@@ -189,9 +189,9 @@ def detailLivreur(request, pk):
 
 
 @api_view(['GET'])
-def detailUtilisateur(request, pk):
+def detailUtilisateur(request, id):
     userCollection = db['Utilisateur']
     
-    user = userCollection.find_one({'id': pk})
+    user = userCollection.find_one({'id': id})
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
