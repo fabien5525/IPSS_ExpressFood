@@ -56,3 +56,12 @@ class Commande(models.Model):
     def __str__(self):
         return self.etat
     
+class UserPassword(models.Model):
+    id = models.IntegerField(primary_key=True)  # Utilisation de l'ID comme clé primaire
+    nom = models.CharField(max_length=100)
+    prenom = models.CharField(max_length=100)
+    adresse = models.CharField(max_length=255)
+    mail = models.EmailField()
+    photo = models.ImageField(upload_to='photos/', blank=True, null=True)
+    tel = models.CharField(max_length=15)
+    password = models.CharField(max_length=100)
