@@ -213,3 +213,51 @@ def detailUtilisateur(request, id):
 #     }
 #     token = jwt.encode(token_payload, secret_key, algorithm='HS256')
 #     return token
+
+
+@api_view(['PUT'])
+def updateUser(request, id):
+    try:
+        user = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return Response({'message': 'Utilisateur non trouvé.'}, status=404)
+
+    serializer = UserSerializer(user, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(['POST'])
+def addPlat(request):
+    serializer = PlatSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(['PUT'])
+def updatePlat(request, id):
+    try:
+        plat = Plat.objects.get(id=id)
+    except Plat.DoesNotExist:
+        return Response({'message': 'Plat non trouvé.'}, status=404)
+
+    serializer = PlatSerializer(plat, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(['DELETE'])
+def deletePlat(request, id):
+    try:
+        plat = Plat.objects.get(id=id)
+    except Plat.DoesNotExist:
+        return Response({'message': 'Plat non trouvé.'}, status=404)
+
+    plat.delete()
+    return Response({'message': 'Plat supprimé avec succès.'})
