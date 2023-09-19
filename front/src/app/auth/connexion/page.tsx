@@ -2,10 +2,13 @@
 
 import { TextField } from "@mui/material";
 import { useState } from "react";
+import Cookies from "universal-cookie";
+import { useRouter } from "next/navigation";
 
 const ConnexionPage = () => {
   const [mail, setMail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,7 +20,22 @@ const ConnexionPage = () => {
 
     //TODO: send to api
 
-    alert("Inscription réussi");
+    //IF NOT GOOD
+    if (false) {
+      alert("Mauvais identifiants");
+      return;
+    }
+
+    const token = "token";
+
+    const cookies = new Cookies();
+    cookies.set("token", token, { path: "/" });
+
+    //TODO: IF owner => redirect to /admin/utilisateur
+
+    //TODO: IF user => redirect to /front/accueil
+    router.push("/front/accueil")
+    return;
   };
 
   return (

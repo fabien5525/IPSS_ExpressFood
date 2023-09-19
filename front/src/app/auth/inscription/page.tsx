@@ -1,6 +1,6 @@
 "use client";
 
-import Utilisateur from "@/components/Utilisateur";
+import Utilisateur from "@/models/Utilisateur";
 import { TextField } from "@mui/material";
 import { useState } from "react";
 

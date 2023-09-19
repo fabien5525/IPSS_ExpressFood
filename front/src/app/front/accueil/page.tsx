@@ -14,20 +14,8 @@ interface Plat {
   image: string | undefined;
 }
 
-const platsExample = [
-  {
-    id: 1,
-    dujour: true,
-    dessert: false,
-    prix: 10,
-    ingredients: ["poulet", "riz", "sauce"],
-    nom: "Poulet riz sauce",
-    image: undefined,
-  },
-];
-
 const AccueilPage = () => {
-  const [plats, setPlats] = useState<Plat[]>(platsExample);
+  const [plats, setPlats] = useState<Plat[]>([]);
   const [filter, setFilter] = useState("");
 
   return (

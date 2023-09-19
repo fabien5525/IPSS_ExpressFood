@@ -1,6 +1,6 @@
 import { InputAdornment, TextField } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import HomeLayout from "@/components/AppLayout";
+import HomeLayout from "./AppLayout";
 
 export default function Home() {
   return (

@@ -1,4 +1,6 @@
-export default interface Utilisateur {
+import { JWTPayload } from "jose";
+
+export default interface Utilisateur extends JWTPayload {
     nom: string;
     prenom: string;
     image: string | undefined;
