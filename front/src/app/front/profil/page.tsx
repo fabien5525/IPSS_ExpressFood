@@ -1,6 +1,6 @@
 "use client";
 
-import Utilisateur from "@/components/Utilisateur";
+import Utilisateur from "@/models/Utilisateur";
 import { Skeleton } from "@mui/material";
 import { useState } from "react";
 

@@ -1,4 +1,4 @@
-import HomeLayout from "@/components/AppLayout";
+import HomeLayout from "@/app/AppLayout";
 import { ReactNode } from "react";
 
 interface Props {

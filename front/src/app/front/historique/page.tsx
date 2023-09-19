@@ -12,20 +12,10 @@ interface commande {
   image: undefined | string;
 }
 
-const commandesExample = [
-  {
-    id: "1",
-    id_plat: 1,
-    nb_plat: 1,
-    prix_total: 10,
-    image: undefined,
-  },
-];
-
 interface HistoryPageProps {}
 
 const HistoryPage = (props: HistoryPageProps) => {
-  const [commandes, setCommandes] = useState<commande[]>(commandesExample);
+  const [commandes, setCommandes] = useState<commande[]>([]);
 
   return (
     <main className="py-4">
