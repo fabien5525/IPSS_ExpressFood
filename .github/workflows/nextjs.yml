@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         working-directory: ./front
         run: npm install
+      - name: tests
+        working-directory: ./front
+        run: npm run lint
       - name: Build with Next.js
         working-directory: ./front
         run: npm run build
