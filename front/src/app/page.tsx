@@ -10,26 +10,28 @@ export default function Home() {
           backgroundImage:
             "linear-gradient(to bottom, #f2ca2f, #f3ca2e, #f5ca2d, #f6c92d, #f8c92c)",
         }}
-        className="h-[92dvh] px-4 flex flex-col"
+        className="h-[92dvh] px-4 flex flex-col items-center"
       >
-        <p className="text-3xl font-bold py-8">
-          Vos plats préférés, directement à votre porte
-        </p>
-        <TextField
-          className="mb-4 p-4 rounded bg-white"
-          placeholder="Saissier adresse de livraison"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LocationOnIcon className="text-black" />
-              </InputAdornment>
-            ),
-          }}
-          variant="standard"
-        />
-        <button className="bg-black text-white font-bold p-4 rounded">
-          Livrer Maintenant
-        </button>
+        <div className="flex flex-col max-w-xl">
+          <p className="text-3xl font-bold py-8">
+            Vos plats préférés, directement à votre porte
+          </p>
+          <TextField
+            className="mb-4 p-4 rounded bg-white"
+            placeholder="Saissier adresse de livraison"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LocationOnIcon className="text-black" />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
+          <button className="bg-black text-white font-bold p-4 rounded">
+            Livrer Maintenant
+          </button>
+        </div>
       </main>
     </HomeLayout>
   );
