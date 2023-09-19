@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 
 from api.models import Plat,User
 
-from .serializers import LivreurSerializer, PlatSerializer, UserSerializer,CommandeSerializer
+from .serializers import LivreurSerializer, PlatSerializer, UserSerializer,CommandeSerializer,UserEtMdpSerializer
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -82,9 +82,9 @@ def getAllCommande(request):
     commandes = list(commandeCollection.find())
 
     users_collection = db['Utilisateur']
- 
     plats_collection = db['Plat']
     res = []
+
     for commande in commandes:
         user_id = commande.get('id_client')
         user = users_collection.find_one({'id': user_id})
@@ -92,13 +92,17 @@ def getAllCommande(request):
         livreur_id = commande.get('id_livreur')
         livreur = users_collection.find_one({'id': livreur_id})
 
-        plat_id = commande.get('id_plat')
-        plat = plats_collection.find_one({'id': plat_id})
+        plat_ids = commande.get('id_plats', [])
+        plats = []
 
+        for plat_id in plat_ids:
+            plat = plats_collection.find_one({'id': plat_id})
+            if plat:
+                plats.append(plat)
+        
         if user and livreur:
             commande_data = {
-                'plat': plat,
-                'nb_plat': commande.get('nb_plat', ''),
+                'plats': plats,  # Liste des plats associés
                 'prix_total': commande.get('prix_total', ''),
                 'user': user,
                 'userlivreur': livreur,
@@ -129,4 +133,38 @@ def updatePlatduJour(request, pk):
     updated_plat = platCollection.find_one({'id': pk})
     serializer = PlatSerializer(updated_plat, many=False)
 
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def CreerCommande(request):
+    commandeCollection = db['Commande']
+    commande = request.data
+    commandeCollection.insert_one(commande)
+    return Response(status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+def Inscription(request):
+    if request.method == 'POST':
+        serializer = UserEtMdpSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # Cela déclenchera la méthode create avec le hachage du mot de passe
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def Connexion(request):
+    userCollection = db['Utilisateur']
+    user_data = request.data
+    serializer = UserEtMdpSerializer(data=request.data)
+    if serializer.is_valid():
+        return Response({"message": "Connexion réussie"}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+def SearchPlat(request, nom):
+    platCollection = db['Plat']
+    query = {"nom": {"$regex": nom, "$options": "i"}}
+    plats = list(platCollection.find(query))
+    
+    serializer = PlatSerializer(plats, many=True)
     return Response(serializer.data)

@@ -47,8 +47,7 @@ class Livreur(models.Model):
         return self.user.nom
     
 class Commande(models.Model):
-    plat = models.ForeignKey(Plat, on_delete=models.CASCADE)
-    nb_plat = models.IntegerField()
+    plats = models.ManyToManyField(Plat)
     prix_total = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     userlivreur = models.ForeignKey(Livreur, on_delete=models.CASCADE)
