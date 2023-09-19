@@ -28,6 +28,9 @@ urlpatterns = [
     path('Inscription/', views.Inscription, name='Inscription'),
     path('Connexion/', views.Connexion, name='Connexion'),
     path('Rechercher/<int:id>', views.SearchPlat, name='Rechercher'),
+
+    path('detailLivreur/<int:id>', views.detailLivreur, name='detailLivreur'),
+    path('detailUtilisateur/<int:id>', views.detailUtilisateur, name='detailUtilisateur'),
     # path('api/', include(router.urls)),
     # path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

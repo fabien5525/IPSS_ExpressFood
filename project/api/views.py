@@ -153,8 +153,6 @@ def Inscription(request):
     
 @api_view(['POST'])
 def Connexion(request):
-    userCollection = db['Utilisateur']
-    user_data = request.data
     serializer = UserEtMdpSerializer(data=request.data)
     if serializer.is_valid():
         return Response({"message": "Connexion réussie"}, status=status.HTTP_200_OK)
@@ -167,4 +165,33 @@ def SearchPlat(request, nom):
     plats = list(platCollection.find(query))
     
     serializer = PlatSerializer(plats, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def detailLivreur(request, pk):
+    livreurCollection = db['Livreur']
+    users_collection = db['Utilisateur']
+
+    livreur = livreurCollection.find_one({'id': pk})
+    
+    user_id = livreur.get('id_user')
+    user = users_collection.find_one({'id': user_id})
+    
+    if user:
+        livreur_data = {
+            'user': user,
+            'localisation': livreur.get('localisation', ''),
+            'status': livreur.get('status', ''),
+        }
+
+    serializer = LivreurSerializer(livreur_data, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def detailUtilisateur(request, pk):
+    userCollection = db['Utilisateur']
+    
+    user = userCollection.find_one({'id': pk})
+    serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
