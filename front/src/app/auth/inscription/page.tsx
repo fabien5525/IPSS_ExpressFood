@@ -4,17 +4,24 @@ import Utilisateur from "@/models/Utilisateur";
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
+interface UtilisateurInscription extends Utilisateur {
+  password: string;
+  confirmPassword: string;
+}
+
 const InscriptionPage = () => {
-  const [utilisateur, setUtilisateur] = useState<Utilisateur>({
+  const [utilisateur, setUtilisateur] = useState<UtilisateurInscription>({
     nom: "",
     prenom: "",
     image: undefined,
     telephone: "",
     email: "",
     adresse: "",
+    password: "",
+    confirmPassword: "",
   });
 
-  const hanleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const hanleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
@@ -48,7 +55,15 @@ const InscriptionPage = () => {
 
     //TODO: send to api
 
-    alert("Inscription réussi");
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(utilisateur),
+    });
+
+    console.log(res);
   };
 
   return (
@@ -110,6 +125,31 @@ const InscriptionPage = () => {
               value={utilisateur.adresse}
               onChange={(e) => {
                 setUtilisateur({ ...utilisateur, adresse: e.target.value });
+              }}
+            />
+            <label htmlFor="password">Mot de passe</label>
+            <TextField
+              className="rounded-lg bg-gray-200"
+              type="password"
+              id="password"
+              variant="outlined"
+              value={utilisateur.password}
+              onChange={(e) => {
+                setUtilisateur({ ...utilisateur, password: e.target.value });
+              }}
+            />
+            <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
+            <TextField
+              className="rounded-lg bg-gray-200"
+              type="password"
+              id="confirmPassword"
+              variant="outlined"
+              value={utilisateur.confirmPassword}
+              onChange={(e) => {
+                setUtilisateur({
+                  ...utilisateur,
+                  confirmPassword: e.target.value,
+                });
               }}
             />
             <button

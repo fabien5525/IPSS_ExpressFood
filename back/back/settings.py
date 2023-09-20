@@ -18,7 +18,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -72,19 +72,55 @@ WSGI_APPLICATION = 'back.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 MONGO_DATABASE = os.environ.get('MONGO_DATABASE')
-MONGO_HOST = os.environ.get('MONGO_HOST')
+MONGO_HOSTNAME = os.environ.get('MONGO_HOSTNAME')
 MONGO_USERNAME = os.environ.get('MONGO_USERNAME')
 MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
+MONGO_PORT = 27017
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': MONGO_DATABASE,
+#         'ENFORCE_SCHEMA': False,
+#         'CLIENT': {
+#             'host': MONGO_HOSTNAME,
+#             'port': MONGO_PORT,
+#             'username': MONGO_USERNAME,
+#             'password': MONGO_PASSWORD,
+#             'authSource': MONGO_DATABASE,
+#             'authMechanism': 'SCRAM-SHA-1'
+#         },
+#         'LOGGING': {
+#             'version': 1,
+#             'loggers': {
+#                 'djongo': {
+#                     'level': 'DEBUG',
+#                     'propagate': False,                        
+#                 }
+#             },
+#         },
+#     }
+# }
+
+# HOST = "mongodb+srv://sampleUser:samplePassword@cluster0-gbdot.mongodb.net/sampleDB?retryWrites=true&w=majority"
+
+MONGO_HOST = f'mongodb+srv://{MONGO_HOSTNAME}:{MONGO_PASSWORD}@{MONGO_HOSTNAME}/{MONGO_DATABASE}?retryWrites=true&w=majority'
 
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': MONGO_DATABASE,
-        'HOST': 'mongodb+srv://' + MONGO_USERNAME + ':' + MONGO_PASSWORD + '@'+ MONGO_HOST +'/' + MONGO_DATABASE + '?retryWrites=true',
-        'USER': MONGO_USERNAME,
-        'PASSWORD': MONGO_PASSWORD,
+        'CLIENT': {
+            'host': MONGO_HOST,
+            'username': MONGO_USERNAME,
+            'password': MONGO_PASSWORD,
+            'authSource': MONGO_DATABASE,
+            'authMechanism': 'SCRAM-SHA-1'
+        }
     }
 }
+
+# https://jacobsood.medium.com/integrating-mongodb-atlas-with-django-using-djongo-962dfd1513eb
+# https://github.com/prasadborkar1109/blog-django-mongodb/blob/master/mongo_engine/settings.py
 
 
 # Password validation
@@ -107,7 +143,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
+# https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -115,13 +151,15 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
