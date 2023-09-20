@@ -10,7 +10,7 @@ const ConnexionPage = () => {
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (mail === "" || password === "") {
@@ -19,23 +19,32 @@ const ConnexionPage = () => {
     }
 
     //TODO: send to api
+    fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ mail, password }),
+    }).then((response) => {
+      console.log(response);
+    });
 
-    //IF NOT GOOD
-    if (false) {
-      alert("Mauvais identifiants");
-      return;
-    }
+    // //IF NOT GOOD
+    // if (false) {
+    //   alert("Mauvais identifiants");
+    //   return;
+    // }
 
-    const token = "token";
+    // const token = "token";
 
-    const cookies = new Cookies();
-    cookies.set("token", token, { path: "/" });
+    // const cookies = new Cookies();
+    // cookies.set("token", token, { path: "/" });
 
-    //TODO: IF owner => redirect to /admin/utilisateur
+    // //TODO: IF owner => redirect to /admin/utilisateur
 
-    //TODO: IF user => redirect to /front/accueil
-    router.push("/front/accueil")
-    return;
+    // //TODO: IF user => redirect to /front/accueil
+    // router.push("/front/accueil")
+    // return;
   };
 
   return (

@@ -13,6 +13,17 @@ py -m venv .venv
 .\.venv\Scripts\activate
 ~~~
 
+## Insérer les variables d'env & certificat
+
+~~~
+cp back/.env.dist back/.env
+~~~
+
+Télécharger https://letsencrypt.org/certs/lets-encrypt-r3.pem
+renommer le fichier .pem en .cer
+double click et installer le certificat
+
+
 ## Récuperer les packets 
 
 ~~~
