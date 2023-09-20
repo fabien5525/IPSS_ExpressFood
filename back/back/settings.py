@@ -67,7 +67,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'back.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -76,33 +75,6 @@ MONGO_HOSTNAME = os.environ.get('MONGO_HOSTNAME')
 MONGO_USERNAME = os.environ.get('MONGO_USERNAME')
 MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
 MONGO_PORT = 27017
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME': MONGO_DATABASE,
-#         'ENFORCE_SCHEMA': False,
-#         'CLIENT': {
-#             'host': MONGO_HOSTNAME,
-#             'port': MONGO_PORT,
-#             'username': MONGO_USERNAME,
-#             'password': MONGO_PASSWORD,
-#             'authSource': MONGO_DATABASE,
-#             'authMechanism': 'SCRAM-SHA-1'
-#         },
-#         'LOGGING': {
-#             'version': 1,
-#             'loggers': {
-#                 'djongo': {
-#                     'level': 'DEBUG',
-#                     'propagate': False,                        
-#                 }
-#             },
-#         },
-#     }
-# }
-
-# HOST = "mongodb+srv://sampleUser:samplePassword@cluster0-gbdot.mongodb.net/sampleDB?retryWrites=true&w=majority"
 
 MONGO_HOST = f'mongodb+srv://{MONGO_HOSTNAME}:{MONGO_PASSWORD}@{MONGO_HOSTNAME}/{MONGO_DATABASE}?retryWrites=true&w=majority'
 
@@ -118,10 +90,6 @@ DATABASES = {
         }
     }
 }
-
-# https://jacobsood.medium.com/integrating-mongodb-atlas-with-django-using-djongo-962dfd1513eb
-# https://github.com/prasadborkar1109/blog-django-mongodb/blob/master/mongo_engine/settings.py
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

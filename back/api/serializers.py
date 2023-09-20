@@ -1,11 +1,6 @@
 from rest_framework import serializers
 from api.models import Plat, User, Livreur, Commande
-from rest_framework.authtoken.models import Token
 import bcrypt
-
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 def hash_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -33,13 +28,17 @@ class CommandeSerializer(serializers.ModelSerializer):
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('mail', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = '__all__'
     
     def create(self, validated_data):
         validated_data['password'] = hash_password(validated_data['password'])
         user = User.objects.create(**validated_data)
 
-        user.save()
+        try:
+            user.save()
+        except:
+            raise serializers.ValidationError({'error': 'Email already exists'})
 
+        # return a jwt token
         return user
+        

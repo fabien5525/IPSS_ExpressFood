@@ -16,10 +16,11 @@ class Plat(models.Model):
         return self.nom
     
 class User(models.Model):
+    _id = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     adresse = models.CharField(max_length=255)
-    mail = models.EmailField()
+    mail = models.EmailField(unique=True)
     photo = models.ImageField(upload_to='photos/', blank=True, null=True)
     tel = models.CharField(max_length=15)
     password = models.CharField(max_length=100)
