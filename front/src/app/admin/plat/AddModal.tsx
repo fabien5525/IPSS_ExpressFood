@@ -112,7 +112,7 @@ const AddModal = (props: AddModalProps) => {
             />
             <span className="mx-2">Dessert</span>
           </div>
-          <button className="bg-green-500 text-white rounded-lg p-2 mt-4">
+          <button className="bg-green-500 text-white rounded-lg p-2 mt-4" type="submit">
             Ajouter
           </button>
         </form>

@@ -20,15 +20,15 @@ import { useState } from "react";
 
 interface LivreurTableProps {
   plats: Plat[];
-  setPlats: (plats: Plat[]) => void;
   limit: number;
   setLimit: (limit: number) => void;
   handleDelete: (id: number) => void;
   setOpenAddModal: (open: boolean) => void;
+  setEditPlat: (plat: Plat | undefined) => void;
 }
 
 const PlatTable = (props: LivreurTableProps) => {
-  const { plats, setPlats, limit, setLimit, handleDelete, setOpenAddModal } =
+  const { plats, limit, setLimit, handleDelete, setOpenAddModal, setEditPlat } =
     props;
 
   const [search, setSearch] = useState("");
@@ -96,11 +96,9 @@ const PlatTable = (props: LivreurTableProps) => {
                 <TableCell>{plat.dessert ? "Oui" : "Non"}</TableCell>
                 <TableCell>{plat.dujour ? "Oui" : "Non"}</TableCell>
                 <TableCell>
-                  <Link href={`/plat/${plat.id}`}>
-                    <IconButton>
-                      <EditIcon className="text-blue-500" />
-                    </IconButton>
-                  </Link>
+                  <IconButton onClick={() => setEditPlat(plat)}>
+                    <EditIcon className="text-blue-500" />
+                  </IconButton>
                   <IconButton onClick={() => handleDelete(plat.id)}>
                     <DeleteIcon className="text-red-600" />
                   </IconButton>

@@ -1,106 +1,113 @@
 "use client";
 
 import { getPayload } from "@/libs/auth";
-import Utilisateur from "@/models/Utilisateur";
-import { createContext, useContext, useEffect, useState } from "react";
+import { utilisateurSimple } from "@/models/Utilisateur";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import Cookies from "universal-cookie";
 
 interface AppContextType {
-    isAuth: boolean;
-    setIsAuth: (isAuth: boolean) => void;
-    user: Utilisateur | undefined;
-    setUser: (user: Utilisateur | undefined) => void;
-    getRoles: () => string[];
-    setToken: (token: string) => void;
-    getToken: () => string | undefined;
+  isAuth: boolean;
+  setIsAuth: (isAuth: boolean) => void;
+  user: utilisateurSimple | undefined;
+  setUser: (user: utilisateurSimple | undefined) => void;
+  getRoles: () => string[];
+  setToken: (token: string) => void;
+  getToken: () => string | undefined;
 }
 
-const appContextDefaultValue : AppContextType = {
-    isAuth: false,
-    setIsAuth: () => {},
-    user: undefined,
-    setUser: () => {},
-    getRoles: () => [],
-    setToken: () => {},
-    getToken: () => undefined,
+const appContextDefaultValue: AppContextType = {
+  isAuth: false,
+  setIsAuth: () => {},
+  user: undefined,
+  setUser: () => {},
+  getRoles: () => [],
+  setToken: () => {},
+  getToken: () => undefined,
 };
 
 const AppContext = createContext<AppContextType>(appContextDefaultValue);
 
 const useAuth = () => {
-    return useContext(AppContext);
-}
+  return useContext(AppContext);
+};
 
-const AppProvider = ({children} : {children: React.ReactNode}) => {
-    const [isAuth, setIsAuth] = useState<boolean>(false);
-    const [user, setUser] = useState<Utilisateur | undefined>(undefined);
+const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [user, setUser] = useState<utilisateurSimple | undefined>(undefined);
 
-    const getToken = () => {
-        const token = new Cookies().get("token");
-        return token ? token : undefined;
+  const getToken = () => {
+    const token = new Cookies().get("token");
+    return token ? token : undefined;
+  };
+
+  const getRoles = () => {
+    const token = getToken();
+
+    if (!token) {
+      return [];
     }
 
-    const getRoles = () => {
-        const token = getToken();
+    const payload = getPayload(getToken());
 
-        if (!token) {
-            return [];
-        }
+    return payload.roles ?? [];
+  };
 
-        const payload = getPayload(getToken());
+  const setToken = (token: string) => {
+    new Cookies().set("token", token, { path: "/" });
+  };
 
-        return payload.roles ?? [];
+  const setUserData = useCallback(async (id: number, token: string) => {
+    const res = await fetch(`/api/user/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log(res);
+
+    if (!res.ok) {
+      return;
     }
 
-    const setToken = (token: string) => {
-        new Cookies().set("token", token, {path: "/"});
+    const data = (await res.json());
+    const user = data.data as utilisateurSimple;
+    setUser(user);
+  }, []);
+
+  useEffect(() => {
+    const token = getToken();
+    console.log(token);
+
+    if (!token) {
+      return;
     }
 
-    const setUserData = async (mail : string, token : string) => {
-        const res = await fetch(`/api/user/${mail}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        });
+    const payload = getPayload(token);
+    console.log(payload);
 
-        console.log(res);
-
-        if (!res.ok) {
-            return;
-        }
-
-        const user = await res.json() as Utilisateur;
-
-        setUser(user);
+    if (!token || !payload.id) {
+      return;
     }
 
+    setIsAuth(true);
+    setUserData(payload.id, token);
+  }, [setUserData]);
 
-    useEffect(() => {
-        const token = getToken();
-        console.log(token);
+  return (
+    <AppContext.Provider
+      value={{ isAuth, setIsAuth, user, setUser, getRoles, setToken, getToken }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
 
-        if (!token) {
-            return;
-        }
-
-        const {username} = getPayload(token);
-        console.log(username);
-
-        if (!token || !username) {
-            return;
-        }
-
-        setIsAuth(true);
-        setUserData(username, token);
-    }, []);
-
-    return (
-        <AppContext.Provider value={{isAuth, setIsAuth, user, setUser, getRoles, setToken, getToken}}>
-            {children}
-        </AppContext.Provider>
-    )
-}
-
-export {AppProvider, useAuth};
+export { AppProvider, useAuth };

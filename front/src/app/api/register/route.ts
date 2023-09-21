@@ -1,13 +1,8 @@
+import { utilisateurSimple } from "@/models/Utilisateur";
+
 const POST = async (req: Request) => {
 
-    const {
-        nom,
-        prenom,
-        email,
-        password,
-        telephone,
-        adresse,
-    } = await req.json();
+    const user = await req.json() as utilisateurSimple;
 
     const api_url = process.env.NEXT_PUBLIC_API_URL;
     
@@ -18,12 +13,12 @@ const POST = async (req: Request) => {
             "Accept": "application/json",
         },
         body: JSON.stringify({
-            nom: nom,
-            prenom: prenom,
-            mail: email,
-            password: password,
-            tel: telephone,
-            adresse: adresse,
+            nom: user.nom,
+            prenom: user.prenom,
+            adresse: user.adresse,
+            mail: user.mail,
+            photo: user.photo,
+            tel: user.tel,
         }),
     });
 
