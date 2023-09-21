@@ -12,7 +12,6 @@ const GET = async (req: Request, { params }: { params: { id: string } }) => {
         },
     });
 
-    console.log(response)
     
     if (response.ok) {
         const data = await response.json();

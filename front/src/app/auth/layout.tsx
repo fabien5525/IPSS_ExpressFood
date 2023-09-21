@@ -22,13 +22,7 @@ const AuthLayout = ({ children }: Props) => {
     }
   }
 
-  return (
-    <html lang="fr">
-      <body>
-        <HomeLayout>{children}</HomeLayout>
-      </body>
-    </html>
-  );
+  return <HomeLayout>{children}</HomeLayout>;
 };
 
 export default AuthLayout;

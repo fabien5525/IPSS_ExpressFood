@@ -26,7 +26,6 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!hasVerifiedToken) {
-    console.log("redirect to login :", token);
     const searchParams = new URLSearchParams(nextUrl.searchParams);
     searchParams.set("next", nextUrl.pathname);
 
