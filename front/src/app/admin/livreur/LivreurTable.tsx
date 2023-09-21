@@ -24,6 +24,7 @@ interface LivreurTableProps {
   setLimit: (limit: number) => void;
   handleDelete: (id: number) => void;
   setOpenAddModal: (open: boolean) => void;
+  setEditLivreur: (livreur: Livreur) => void;
 }
 
 const LivreurTable = (props: LivreurTableProps) => {
@@ -33,6 +34,7 @@ const LivreurTable = (props: LivreurTableProps) => {
     setLimit,
     handleDelete,
     setOpenAddModal,
+    setEditLivreur,
   } = props;
 
   const [search, setSearch] = useState("");
