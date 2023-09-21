@@ -1,7 +1,6 @@
 export default interface Livreur {
-    id: string;
-    id_user: string;
-    localisation: string;
-    status: string;
-  }
-  
+  id: number;
+  localisation: string;
+  status: string;
+  user: number;
+}

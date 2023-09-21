@@ -1,24 +1,32 @@
-import { PlatToAdd } from "@/app/api/dish/route";
 import { useAuth } from "@/contexts/AppContext";
 import { getPayload } from "@/libs/auth";
-import { Modal, Box, Typography, TextField, Switch } from "@mui/material";
+import Livreur from "@/models/Livreur";
+import { utilisateurSimple } from "@/models/Utilisateur";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { useState } from "react";
 
 interface AddModalProps {
   open: boolean;
   setOpen: (v: boolean) => void;
-  fetchDishes: () => void;
+  fetchLivreurs: () => void;
+  userThatCanBeLivreur: utilisateurSimple[];
 }
 
 const AddModal = (props: AddModalProps) => {
-  const { open, setOpen, fetchDishes } = props;
+  const { open, setOpen, fetchLivreurs, userThatCanBeLivreur } = props;
   const { getToken } = useAuth();
-  const [plat, setPlat] = useState<PlatToAdd>({
-    nom: "",
-    prix: 0,
-    ingredients: "",
-    dujour: true,
-    dessert: false,
+  const [livreur, setLivreur] = useState<Livreur>({
+    id: 0,
+    localisation: "",
+    status: "",
+    user: 0,
   });
 
   const handleClose = () => {
@@ -30,25 +38,25 @@ const AddModal = (props: AddModalProps) => {
 
     const token = getToken();
 
-    if (!token) {
+    if (!token || livreur.user === 0) {
       return;
     }
 
     const payload = getPayload(token);
     console.log(payload);
 
-    const response = await fetch(`/api/dish`, {
+    const response = await fetch(`/api/deliveryman`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(plat),
+      body: JSON.stringify(livreur),
     });
 
     if (response.ok) {
       setOpen(false);
-      fetchDishes();
+      fetchLivreurs();
     } else {
       console.log(response);
     }
@@ -76,43 +84,45 @@ const AddModal = (props: AddModalProps) => {
       >
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Ajouter un plat
+            Ajouter un livreur
           </Typography>
           <TextField
+            label="Localisation"
             variant="outlined"
-            label="Nom"
-            value={plat.nom}
-            onChange={(e) => setPlat({ ...plat, nom: e.target.value })}
-          />
-          <TextField
-            variant="outlined"
-            label="Prix"
-            value={plat.prix}
+            value={livreur.localisation}
             onChange={(e) =>
-              setPlat({ ...plat, prix: parseInt(e.target.value) })
+              setLivreur({ ...livreur, localisation: e.target.value })
             }
           />
           <TextField
+            label="Status"
             variant="outlined"
-            label="Ingrédients"
-            value={plat.ingredients}
-            onChange={(e) => setPlat({ ...plat, ingredients: e.target.value })}
+            value={livreur.status}
+            onChange={(e) => setLivreur({ ...livreur, status: e.target.value })}
           />
           <div>
-            <Switch
-              checked={plat.dujour}
-              onChange={(e) => setPlat({ ...plat, dujour: e.target.checked })}
-            />
-            <span className="mx-2">Plat du jour</span>
+            <Select
+              onChange={(e) =>
+                setLivreur({
+                  ...livreur,
+                  user: parseInt(e.target.value as string),
+                })
+              }
+            >
+              <MenuItem value={0}></MenuItem>
+              {userThatCanBeLivreur.map((user) => {
+                return (
+                  <MenuItem key={user.id} value={user.id}>
+                    {`${user.nom} ${user.prenom} - ${user.mail}`}
+                  </MenuItem>
+                );
+              })}
+            </Select>
           </div>
-          <div>
-            <Switch
-              checked={plat.dessert}
-              onChange={(e) => setPlat({ ...plat, dessert: e.target.checked })}
-            />
-            <span className="mx-2">Dessert</span>
-          </div>
-          <button className="bg-green-500 text-white rounded-lg p-2 mt-4" type="submit">
+          <button
+            className="bg-green-500 text-white rounded-lg p-2 mt-4"
+            type="submit"
+          >
             Ajouter
           </button>
         </form>

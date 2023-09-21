@@ -1,8 +1,10 @@
+import Livreur from "@/models/Livreur";
+
 const GET = async (req: Request) => {
     const api_url = process.env.NEXT_PUBLIC_API_URL;
     const auth = req.headers.get("Authorization") ?? "";
 
-    const response = await fetch(`${api_url}/plat/`, {
+    const response = await fetch(`${api_url}/livreur/`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -24,14 +26,6 @@ const GET = async (req: Request) => {
             status: 401,
         })
     }
-};
-
-export interface PlatToAdd {
-    nom: string;
-    prix: number;
-    ingredients: string;
-    dujour: boolean;
-    dessert: boolean;
 }
 
 const POST = async (req: Request) => {
@@ -39,22 +33,18 @@ const POST = async (req: Request) => {
     const auth = req.headers.get("Authorization") ?? "";
 
     const {
-        nom,
-        prix,
-        ingredients,
-        dujour,
-        dessert,
-    } = await req.json() as PlatToAdd;
+        localisation,
+        status,
+        user,
+    } = await req.json() as Livreur;
 
     const json_body = JSON.stringify({
-        nom,
-        prix,
-        ingredient: ingredients,
-        dujour,
-        dessert,
+        localisation,
+        status,
+        user,
     })
 
-    const response = await fetch(`${api_url}/plat/`, {
+    const response = await fetch(`${api_url}/livreur/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -64,13 +54,12 @@ const POST = async (req: Request) => {
         body: json_body,
     });
 
-    console.log(response)
-    const data = await response.json();
-    console.log(data)
-
     if (response.ok) {
-        console.log(data)
-        return new Response(data, {
+        const data = await response.json();
+        const json_data = JSON.stringify({
+            data: data,
+        });
+        return new Response(json_data, {
             status: 200,
         })
     } else {

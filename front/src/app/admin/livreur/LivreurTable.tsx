@@ -14,19 +14,28 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import Livreur from "@/models/Livreur";
 import { useState } from "react";
 
 interface LivreurTableProps {
   livreurs: Livreur[];
-  setLivreurs: (livreurs: Livreur[]) => void;
   limit: number;
   setLimit: (limit: number) => void;
-  handleDelete: (email: string) => void;
+  handleDelete: (id: number) => void;
+  setOpenAddModal: (open: boolean) => void;
+  setEditLivreur: (livreur: Livreur) => void;
 }
 
 const LivreurTable = (props: LivreurTableProps) => {
-  const { livreurs, setLivreurs, limit, setLimit, handleDelete } = props;
+  const {
+    livreurs,
+    limit,
+    setLimit,
+    handleDelete,
+    setOpenAddModal,
+    setEditLivreur,
+  } = props;
 
   const [search, setSearch] = useState("");
 
@@ -51,6 +60,10 @@ const LivreurTable = (props: LivreurTableProps) => {
               />
             </TableCell>
             <TableCell colSpan={1} className="flex justify-end">
+              <IconButton onClick={() => setOpenAddModal(true)}>
+                <AddIcon />
+              </IconButton>
+
               <Select
                 className="mx-2"
                 value={limit}
@@ -84,11 +97,9 @@ const LivreurTable = (props: LivreurTableProps) => {
                 <TableCell>{livreur.localisation}</TableCell>
                 <TableCell>{livreur.status}</TableCell>
                 <TableCell>
-                  <Link href={`/livreur/${livreur.id}`}>
-                    <IconButton>
-                      <EditIcon className="text-blue-500" />
-                    </IconButton>
-                  </Link>
+                  <IconButton onClick={() => setEditLivreur(livreur)}>
+                    <EditIcon className="text-blue-500" />
+                  </IconButton>
                   <IconButton onClick={() => handleDelete(livreur.id)}>
                     <DeleteIcon className="text-red-600" />
                   </IconButton>

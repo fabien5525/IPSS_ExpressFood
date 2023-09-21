@@ -1,11 +1,11 @@
 "use client";
 
-import Utilisateur from "@/models/Utilisateur";
+import { utilisateurSimple } from "@/models/Utilisateur";
 import { TextField } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface UtilisateurInscription extends Utilisateur {
+interface UtilisateurInscription extends utilisateurSimple {
   password: string;
   confirmPassword: string;
 }
@@ -13,11 +13,12 @@ interface UtilisateurInscription extends Utilisateur {
 const InscriptionPage = () => {
   const router = useRouter();
   const [utilisateur, setUtilisateur] = useState<UtilisateurInscription>({
+    id: 0,
     nom: "",
     prenom: "",
-    photo: undefined,
-    telephone: "",
-    email: "",
+    photo: null,
+    tel: "",
+    mail: "",
     adresse: "",
     password: "",
     confirmPassword: "",
@@ -29,8 +30,8 @@ const InscriptionPage = () => {
     if (
       utilisateur.nom === "" ||
       utilisateur.prenom === "" ||
-      utilisateur.telephone === "" ||
-      utilisateur.email === "" ||
+      utilisateur.tel === "" ||
+      utilisateur.mail === "" ||
       utilisateur.adresse === ""
     ) {
       alert("Veuillez remplir tous les champs");
@@ -41,14 +42,14 @@ const InscriptionPage = () => {
       "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$"
     );
 
-    if (!regexEmail.test(utilisateur.email)) {
+    if (!regexEmail.test(utilisateur.mail)) {
       alert("Veuillez entrer une adresse e-mail valide");
       return;
     }
 
     const regexTelephone = new RegExp("^[0-9]{10}$");
 
-    if (!regexTelephone.test(utilisateur.telephone)) {
+    if (!regexTelephone.test(utilisateur.tel)) {
       alert("Veuillez entrer un numéro de téléphone valide");
       return;
     }
@@ -68,7 +69,7 @@ const InscriptionPage = () => {
       return;
     }
 
-    router.push("/auth/connexion")
+    router.push("/auth/connexion");
   };
 
   return (
@@ -105,9 +106,9 @@ const InscriptionPage = () => {
               placeholder=""
               id="telephone"
               variant="outlined"
-              value={utilisateur.telephone}
+              value={utilisateur.tel}
               onChange={(e) => {
-                setUtilisateur({ ...utilisateur, telephone: e.target.value });
+                setUtilisateur({ ...utilisateur, tel: e.target.value });
               }}
             />
             <label htmlFor="email">Adresse e-mail</label>
@@ -116,9 +117,9 @@ const InscriptionPage = () => {
               placeholder=""
               id="email"
               variant="outlined"
-              value={utilisateur.email}
+              value={utilisateur.mail}
               onChange={(e) => {
-                setUtilisateur({ ...utilisateur, email: e.target.value });
+                setUtilisateur({ ...utilisateur, mail: e.target.value });
               }}
             />
             <label htmlFor="adresse">Adresse</label>

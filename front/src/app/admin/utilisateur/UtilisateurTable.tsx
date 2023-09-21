@@ -14,20 +14,26 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Utilisateur from "@/models/Utilisateur";
+import { utilisateurSimple } from "@/models/Utilisateur";
 import { useState } from "react";
 
 interface UtilisateurTableProps {
-  utilisateurs: Utilisateur[];
-  setUtilisateurs: (utilisateurs: Utilisateur[]) => void;
+  utilisateurs: utilisateurSimple[];
+  setUtilisateurs: (utilisateurs: utilisateurSimple[]) => void;
   limit: number;
   setLimit: (limit: number) => void;
-  handleDelete: (email: string) => void;
+  handleDelete: (id: number) => void;
+  setEditUser: (utilisateur: utilisateurSimple | undefined) => void;
 }
 
 const UtilisateurTable = (props: UtilisateurTableProps) => {
-  const { utilisateurs, setUtilisateurs, limit, setLimit, handleDelete } =
-    props;
+  const {
+    utilisateurs,
+    limit,
+    setLimit,
+    handleDelete,
+    setEditUser,
+  } = props;
 
   const [search, setSearch] = useState("");
 
@@ -35,8 +41,8 @@ const UtilisateurTable = (props: UtilisateurTableProps) => {
     return (
       utilisateur.nom.includes(search) ||
       utilisateur.prenom.includes(search) ||
-      utilisateur.email.includes(search) ||
-      utilisateur.telephone.includes(search) ||
+      utilisateur.mail.includes(search) ||
+      utilisateur.tel.includes(search) ||
       utilisateur.adresse.includes(search)
     );
   });
@@ -89,16 +95,14 @@ const UtilisateurTable = (props: UtilisateurTableProps) => {
               <TableRow key={index}>
                 <TableCell>{utilisateur.nom}</TableCell>
                 <TableCell>{utilisateur.prenom}</TableCell>
-                <TableCell>{utilisateur.email}</TableCell>
-                <TableCell>{utilisateur.telephone}</TableCell>
+                <TableCell>{utilisateur.mail}</TableCell>
+                <TableCell>{utilisateur.tel}</TableCell>
                 <TableCell>{utilisateur.adresse}</TableCell>
                 <TableCell>
-                  <Link href={`/utilisateur/${utilisateur.email}`}>
-                    <IconButton>
-                      <EditIcon className="text-blue-500" />
-                    </IconButton>
-                  </Link>
-                  <IconButton onClick={() => handleDelete(utilisateur.email)}>
+                  <IconButton onClick={() => setEditUser(utilisateur)}>
+                    <EditIcon className="text-blue-500" />
+                  </IconButton>
+                  <IconButton onClick={() => handleDelete(utilisateur.id)}>
                     <DeleteIcon className="text-red-600" />
                   </IconButton>
                 </TableCell>

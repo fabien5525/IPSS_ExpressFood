@@ -1,27 +1,16 @@
 "use client";
 
-import Utilisateur from "@/models/Utilisateur";
+import { useAuth } from "@/contexts/AppContext";
 import { Skeleton } from "@mui/material";
-import { useState } from "react";
-
-const utilisateurExample: Utilisateur = {
-  nom: "Doe",
-  prenom: "John",
-  telephone: "0600000000",
-  email: "text@text.test",
-  adresse: "1 rue de la paix",
-  photo: undefined,
-};
 
 const ProfilePage = () => {
-  const [utilisateur, setUtilisateur] =
-    useState<Utilisateur>(utilisateurExample);
+  const { user } = useAuth();
 
   return (
     <main>
       <div className="p-4 flex flex-row justify-between">
         <p className="text-lg font-bold">
-          {utilisateur.nom} {utilisateur.prenom}
+          {user?.nom} {user?.prenom}
         </p>
         <Skeleton variant="circular" width={64} height={64} />
       </div>
@@ -31,18 +20,18 @@ const ProfilePage = () => {
           <div className="py-4">
             <p>Nom</p>
             <p className="text-gray-500">
-              {utilisateur.prenom} {utilisateur.nom}
+              {user?.prenom} {user?.nom}
             </p>
           </div>
           <hr />
           <div className="py-4">
             <p>Téléphone</p>
-            <p className="text-gray-500">{utilisateur.telephone}</p>
+            <p className="text-gray-500">{user?.tel}</p>
           </div>
           <hr />
           <div className="py-4">
             <p>Adresse e-mail</p>
-            <p className="text-gray-500">{utilisateur.email}</p>
+            <p className="text-gray-500">{user?.mail}</p>
           </div>
         </div>
       </div>

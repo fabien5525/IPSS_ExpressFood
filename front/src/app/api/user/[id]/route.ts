@@ -1,9 +1,9 @@
-const GET = async (req: Request, { params }: { params: { mail: string } }) => {
-    const mail = params.mail;
+const GET = async (req: Request, { params }: { params: { id: string } }) => {
+    const id = params.id;
     const auth = req.headers.get("Authorization") ?? "";
 
     const api_url = process.env.NEXT_PUBLIC_API_URL; 
-    const response = await fetch(`${api_url}/utilisateur/${mail}`, {
+    const response = await fetch(`${api_url}/user/${id}/`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -16,12 +16,15 @@ const GET = async (req: Request, { params }: { params: { mail: string } }) => {
     
     if (response.ok) {
         const data = await response.json();
-        return new Response(data, {
+        const json_data = JSON.stringify({
+            data: data,
+        });
+        return new Response(json_data, {
             status: 200,
         })
     } else {
         return new Response(null, {
-            status: 401,
+            status: 400,
         })
     }
 };
