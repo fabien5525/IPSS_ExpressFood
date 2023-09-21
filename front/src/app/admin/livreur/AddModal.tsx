@@ -7,20 +7,20 @@ import {
   Box,
   Typography,
   TextField,
-  Switch,
   Select,
   MenuItem,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 interface AddModalProps {
   open: boolean;
   setOpen: (v: boolean) => void;
   fetchLivreurs: () => void;
+  userThatCanBeLivreur: utilisateurSimple[];
 }
 
 const AddModal = (props: AddModalProps) => {
-  const { open, setOpen, fetchLivreurs } = props;
+  const { open, setOpen, fetchLivreurs, userThatCanBeLivreur } = props;
   const { getToken } = useAuth();
   const [livreur, setLivreur] = useState<Livreur>({
     id: 0,
@@ -28,26 +28,6 @@ const AddModal = (props: AddModalProps) => {
     status: "",
     user: 0,
   });
-  const [users, setUsers] = useState<utilisateurSimple[]>([]);
-
-  const fetchUsers = useCallback(async () => {
-    const token = getToken();
-    const res = await fetch(`/api/user/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!res.ok) {
-      return;
-    }
-
-    const data = await res.json();
-
-    setUsers(data.data);
-  }, [getToken]);
 
   const handleClose = () => {
     setOpen(false);
@@ -81,10 +61,6 @@ const AddModal = (props: AddModalProps) => {
       console.log(response);
     }
   };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
 
   return (
     <Modal
@@ -134,7 +110,7 @@ const AddModal = (props: AddModalProps) => {
               }
             >
               <MenuItem value={0}></MenuItem>
-              {users.map((user) => {
+              {userThatCanBeLivreur.map((user) => {
                 return (
                   <MenuItem key={user.id} value={user.id}>
                     {`${user.nom} ${user.prenom} - ${user.mail}`}
