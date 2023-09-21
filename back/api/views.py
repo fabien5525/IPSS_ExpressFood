@@ -106,3 +106,71 @@ class UserLoginView(views.APIView):
         jwt_token = JWTAuthentication.create_jwt(user)
 
         return Response({'token': jwt_token})
+
+
+
+class CommandeEnCoursetView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ObtainTokenSerializer
+
+    def get(self, request, id):
+        try:
+            commande = Commande.objects.get(id=id)
+            if commande.status == 'en cours':
+                serializer = CommandeSerializer(commande)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "La commande n'est pas en cours."}, status=status.HTTP_404_NOT_FOUND)
+        except Commande.DoesNotExist:
+            return Response({"message": "Commande introuvable."}, status=status.HTTP_404_NOT_FOUND)
+        
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
+
+class LocalisationView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ObtainTokenSerializer
+
+    def get(self, request, email):
+        try:
+            user = User.objects.get(email=email)
+            
+            geolocator = Nominatim(user_agent="service_de_distance_km")
+            user_location = geolocator.geocode(user.adresse)
+            fixed_location = geolocator.geocode("Champs-Élysées, Paris")
+            if user_location and fixed_location:
+                distance = geodesic((user_location.latitude, user_location.longitude),
+                                    (fixed_location.latitude, fixed_location.longitude)).kilometers
+                print(f"Distance entre l'adresse de l'utilisateur et l'adresse fixe : {distance} km")
+                return Response({"distance": distance}, status=status.HTTP_200_OK)
+            else:
+                print("L'une des adresses n'a pas pu être géolocalisée.")
+                return Response({"message": "L'une des adresses n'a pas pu être géolocalisée."}, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({"message": "Commande introuvable."}, status=status.HTTP_404_NOT_FOUND)
+
+class LivreurPrendCommande(views.APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ObtainTokenSerializer
+
+    def get(self, request, email):
+        try:
+            user = User.objects.get(email=email)
+            geolocator = Nominatim(user_agent="service_de_distance_km")
+            user_location = geolocator.geocode(user.adresse)
+            livreurs = Livreur.objects.exclude(user=user)
+            for livreur in livreurs:
+                livreur_location = geolocator.geocode(livreur.adresse)
+                if user_location and livreur_location:
+                    distance = geodesic((user_location.latitude, user_location.longitude),
+                                        (livreur_location.latitude, livreur_location.longitude)).kilometers
+                    if distance < 10:
+                        return Response({"livreur": livreur.id}, status=status.HTTP_200_OK)
+                print(f"Distance entre l'adresse de l'utilisateur et l'adresse fixe : {distance} km")
+                return Response({"distance": distance}, status=status.HTTP_200_OK)
+            else:
+                print("L'une des adresses n'a pas pu être géolocalisée.")
+                return Response({"message": "L'une des adresses n'a pas pu être géolocalisée."}, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({"message": "Commande introuvable."}, status=status.HTTP_404_NOT_FOUND)
+        
