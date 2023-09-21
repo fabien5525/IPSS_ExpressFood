@@ -2,9 +2,6 @@ from rest_framework import serializers
 from api.models import Plat, User, Livreur, Commande
 import bcrypt
 
-def hash_password(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
 class PlatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plat
@@ -31,14 +28,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
     def create(self, validated_data):
-        validated_data['password'] = hash_password(validated_data['password'])
+        plain_password = validated_data['password'].encode('utf-8')
+        salt = bcrypt.gensalt()
+        validated_data['password'] = bcrypt.hashpw(plain_password, salt).decode('utf-8')
+        validated_data['username'] = validated_data['mail']
+
         user = User.objects.create(**validated_data)
+        user.password = ''
 
-        try:
-            user.save()
-        except:
-            raise serializers.ValidationError({'error': 'Email already exists'})
-
-        # return a jwt token
         return user
-        
