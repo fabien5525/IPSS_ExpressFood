@@ -36,7 +36,7 @@ const AppDrawer = (props: AppDrawerProps) => {
             setOpen(false);
           }}
         >
-          Inscripton
+          Inscription
         </button>
         <button
           className="bg-gray-200 text-black px-6 py-4 w-full rounded mb-4"
