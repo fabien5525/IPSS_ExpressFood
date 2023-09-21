@@ -20,10 +20,17 @@ schema_view = get_schema_view(
     public=True,
 )
 
+from django.conf import settings
+from django.views.static import serve
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/register/', UserRegistrationView.as_view(), name='user-registration'),
     path('api/login/', UserLoginView.as_view(), name='user-login'),
+    # static folder
+    path('images/<path:path>/', serve, {'document_root': str(settings.BASE_DIR) + "/images/"}),
 ]
+

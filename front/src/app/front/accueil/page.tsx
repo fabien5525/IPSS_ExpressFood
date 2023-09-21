@@ -22,7 +22,7 @@ const AccueilPage = () => {
 
   const fetchDishes = useCallback(async () => {
     const token = getToken();
-    const res = await fetch(`/api/plat`, {
+    const res = await fetch(`/api/dish`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
