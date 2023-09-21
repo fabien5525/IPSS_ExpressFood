@@ -36,7 +36,7 @@ const AccueilPage = () => {
 
     const data = await res.json();
 
-    setPlats(data);
+    setPlats(data.data ?? []);
   }, [getToken]);
 
   useEffect(() => {
