@@ -1,7 +1,7 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-
+import datetime
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,9 +32,32 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework_jwt',
     'api',
 	'drf_yasg',
 ]
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'api.views.AllowRegisterLogin',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+    'rest_framework_jwt.utils.jwt_response_payload_handler',
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+    'JWT_ALLOW_REFRESH': False,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -67,7 +90,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'back.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -76,33 +98,6 @@ MONGO_HOSTNAME = os.environ.get('MONGO_HOSTNAME')
 MONGO_USERNAME = os.environ.get('MONGO_USERNAME')
 MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
 MONGO_PORT = 27017
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME': MONGO_DATABASE,
-#         'ENFORCE_SCHEMA': False,
-#         'CLIENT': {
-#             'host': MONGO_HOSTNAME,
-#             'port': MONGO_PORT,
-#             'username': MONGO_USERNAME,
-#             'password': MONGO_PASSWORD,
-#             'authSource': MONGO_DATABASE,
-#             'authMechanism': 'SCRAM-SHA-1'
-#         },
-#         'LOGGING': {
-#             'version': 1,
-#             'loggers': {
-#                 'djongo': {
-#                     'level': 'DEBUG',
-#                     'propagate': False,                        
-#                 }
-#             },
-#         },
-#     }
-# }
-
-# HOST = "mongodb+srv://sampleUser:samplePassword@cluster0-gbdot.mongodb.net/sampleDB?retryWrites=true&w=majority"
 
 MONGO_HOST = f'mongodb+srv://{MONGO_HOSTNAME}:{MONGO_PASSWORD}@{MONGO_HOSTNAME}/{MONGO_DATABASE}?retryWrites=true&w=majority'
 
@@ -118,10 +113,6 @@ DATABASES = {
         }
     }
 }
-
-# https://jacobsood.medium.com/integrating-mongodb-atlas-with-django-using-djongo-962dfd1513eb
-# https://github.com/prasadborkar1109/blog-django-mongodb/blob/master/mongo_engine/settings.py
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
