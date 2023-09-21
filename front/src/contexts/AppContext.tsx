@@ -71,7 +71,6 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       },
     });
 
-    console.log(res);
 
     if (!res.ok) {
       return;
@@ -84,14 +83,12 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const token = getToken();
-    console.log(token);
 
     if (!token) {
       return;
     }
 
     const payload = getPayload(token);
-    console.log(payload);
 
     if (!token || !payload.id) {
       return;

@@ -27,7 +27,6 @@ const EditModal = (props: EditModalProps) => {
     }
 
     const payload = getPayload(token);
-    console.log(payload);
 
     const response = await fetch(`/api/user/`, {
       method: "PATCH",

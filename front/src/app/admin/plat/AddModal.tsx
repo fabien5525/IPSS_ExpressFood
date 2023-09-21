@@ -35,7 +35,6 @@ const AddModal = (props: AddModalProps) => {
     }
 
     const payload = getPayload(token);
-    console.log(payload);
 
     const response = await fetch(`/api/dish`, {
       method: "POST",
@@ -50,7 +49,7 @@ const AddModal = (props: AddModalProps) => {
       setOpen(false);
       fetchDishes();
     } else {
-      console.log(response);
+      alert("Erreur lors de l'ajout du plat");
     }
   };
 

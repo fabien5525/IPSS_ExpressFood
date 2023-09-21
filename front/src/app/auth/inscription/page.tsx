@@ -62,7 +62,6 @@ const InscriptionPage = () => {
       body: JSON.stringify(utilisateur),
     });
 
-    console.log(res);
 
     if (!res.ok) {
       alert("Email déjà utilisé");

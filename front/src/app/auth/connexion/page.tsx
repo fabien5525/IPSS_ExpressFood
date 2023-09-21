@@ -30,7 +30,6 @@ const ConnexionPage = () => {
       body: JSON.stringify({ mail, password }),
     });
 
-    console.log(response)
 
     if (!response.ok) {
       alert("Mauvais identifiants");
