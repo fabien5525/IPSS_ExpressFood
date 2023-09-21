@@ -1,6 +1,6 @@
 import json
 import bcrypt
-from rest_framework import viewsets
+from rest_framework import viewsets,filters
 from api.models import Plat, User, Livreur, Commande
 from api.serializers import ObtainTokenSerializer, PlatSerializer, UserSerializer, LivreurSerializer, CommandeSerializer, UserRegistrationSerializer
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -10,15 +10,28 @@ from rest_framework.response import Response
 from rest_framework.response import Response
 from api.authentification import JWTAuthentication
 
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+
+from django.db.models import Q
+
 class PlatViewSet(viewsets.ModelViewSet):
     queryset = Plat.objects.all()
     serializer_class = PlatSerializer
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nom', 'ingredient']  # Ajoutez les champs que vous voulez rechercher ici
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_param = self.request.query_params.get('search', None)
+        if search_param:
+            # Filtrer les plats qui contiennent la chaîne de recherche dans le nom ou les ingrédients
+            queryset = queryset.filter(Q(nom__icontains=search_param) | Q(ingredient__icontains=search_param))
+        return queryset
+    
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.exclude(id__in=Livreur.objects.values('user'))
     serializer_class = UserSerializer
 
 @authentication_classes([JWTAuthentication])
