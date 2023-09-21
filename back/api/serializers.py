@@ -37,3 +37,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.password = ''
 
         return user
+    
+class ObtainTokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()

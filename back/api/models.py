@@ -1,5 +1,6 @@
 import bcrypt
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class Plat(models.Model):
@@ -24,7 +25,7 @@ class Role(models.Model):
     def __unicode__(self):
         return self.name
     
-class User(models.Model):
+class User(AbstractUser):
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     adresse = models.CharField(max_length=255)
@@ -35,8 +36,10 @@ class User(models.Model):
     username = models.CharField(unique=True, max_length=100, null=True)
     roles = models.ManyToManyField(Role, blank=True)
     
+    REQUIRED_FIELDS = ['nom', 'prenom', 'adresse', 'mail', 'tel', 'password']
+
     def __str__(self):
-        return self.nom
+        return self.mail
     def __unicode__(self):
         return self.nom
     
@@ -49,6 +52,9 @@ class User(models.Model):
         if is_new_user:
             default_role = Role.objects.get(name='user')
             self.roles.add(default_role)
+
+    def custom_chech_password(self, password_to_verify : str):
+        return bcrypt.checkpw(password_to_verify.encode('utf-8'), self.password.encode('utf-8'))
 
 class Livreur(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

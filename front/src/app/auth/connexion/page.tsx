@@ -4,11 +4,14 @@ import { TextField } from "@mui/material";
 import { useState } from "react";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
+import { getPayload } from "@/libs/auth";
+import { useAuth } from "@/contexts/AppContext";
 
 const ConnexionPage = () => {
   const [mail, setMail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
+  const { setToken } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,32 +22,35 @@ const ConnexionPage = () => {
     }
 
     //TODO: send to api
-    fetch("/api/login", {
+    const response = await fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ mail, password }),
-    }).then((response) => {
-      console.log(response);
     });
 
-    // //IF NOT GOOD
-    // if (false) {
-    //   alert("Mauvais identifiants");
-    //   return;
-    // }
+    console.log(response)
 
-    // const token = "token";
+    if (!response.ok) {
+      alert("Mauvais identifiants");
+      setMail("");
+      setPassword("");
+      return;
+    }
 
-    // const cookies = new Cookies();
-    // cookies.set("token", token, { path: "/" });
+    const data = await response.json();
+    const {token} = data;
+    setToken(token);
 
-    // //TODO: IF owner => redirect to /admin/utilisateur
+    const payload = getPayload(token);
 
-    // //TODO: IF user => redirect to /front/accueil
-    // router.push("/front/accueil")
-    // return;
+    if (payload.roles.includes("admin")) {
+      router.push("/admin/utilisateur");
+      return;
+    }
+
+    router.push("/front/accueil")
   };
 
   return (
@@ -67,6 +73,7 @@ const ConnexionPage = () => {
             <label htmlFor="password">Mot de passe</label>
             <TextField
               className="rounded-lg bg-gray-200"
+              placeholder="*********"
               type="password"
               id="password"
               variant="outlined"

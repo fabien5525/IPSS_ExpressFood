@@ -1,8 +1,9 @@
 "use client";
 
 import { Paper, Skeleton, TextField } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AppContext";
 
 interface Plat {
   id: number;
@@ -17,12 +18,36 @@ interface Plat {
 const AccueilPage = () => {
   const [plats, setPlats] = useState<Plat[]>([]);
   const [filter, setFilter] = useState("");
+  const { user, getToken } = useAuth(); 
+
+  const fetchDishes = useCallback(async () => {
+    const token = getToken();
+    const res = await fetch(`/api/plat`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    });
+
+    if (!res.ok) {
+      return;
+    }
+
+    const data = await res.json();
+
+    setPlats(data);
+  }, [getToken]);
+
+  useEffect(() => {
+    fetchDishes();
+  }, [fetchDishes])
 
   return (
     <main className="p-2 min-h-[100dvh]">
       <div className="pb-2">
         <p className="text-xs">Livrer maintenant</p>
-        <p className="text-xs font-bold">Address...</p>
+        <p className="text-xs font-bold">{user?.adresse}</p>
       </div>
       <input
         type="text"

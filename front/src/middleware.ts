@@ -1,7 +1,7 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import { verifyJwtToken } from "@/libs/auth";
+import { getRoles, verifyJwtToken } from "@/libs/auth";
 
 const AUTH_PAGES = ["/auth/connexion", "/auth/inscription"];
 
@@ -37,6 +37,19 @@ export async function middleware(request: NextRequest) {
 
     return response;
   }
+
+  // check roles : 
+    // admin => /admin
+    // user => /front
+    const roles = getRoles(token);
+
+    if (roles.includes("admin") && nextUrl.pathname.startsWith("/admin")) {
+      return NextResponse.next();
+    }
+
+    if (roles.includes("user") && nextUrl.pathname.startsWith("/front")) {
+      return NextResponse.next();
+    }
 
   return NextResponse.next();
 }
