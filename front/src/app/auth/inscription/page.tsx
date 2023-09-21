@@ -2,6 +2,7 @@
 
 import Utilisateur from "@/models/Utilisateur";
 import { TextField } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface UtilisateurInscription extends Utilisateur {
@@ -10,10 +11,11 @@ interface UtilisateurInscription extends Utilisateur {
 }
 
 const InscriptionPage = () => {
+  const router = useRouter();
   const [utilisateur, setUtilisateur] = useState<UtilisateurInscription>({
     nom: "",
     prenom: "",
-    image: undefined,
+    photo: undefined,
     telephone: "",
     email: "",
     adresse: "",
@@ -51,10 +53,6 @@ const InscriptionPage = () => {
       return;
     }
 
-    console.log(utilisateur);
-
-    //TODO: send to api
-
     const res = await fetch("/api/register", {
       method: "POST",
       headers: {
@@ -64,6 +62,13 @@ const InscriptionPage = () => {
     });
 
     console.log(res);
+
+    if (!res.ok) {
+      alert("Email déjà utilisé");
+      return;
+    }
+
+    router.push("/auth/connexion")
   };
 
   return (

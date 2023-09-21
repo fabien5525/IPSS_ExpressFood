@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server'
-
 const POST = async (req: Request) => {
 
     const {
@@ -9,10 +7,10 @@ const POST = async (req: Request) => {
         password,
         telephone,
         adresse,
-    } = req.body as any;
+    } = await req.json();
 
     const api_url = process.env.NEXT_PUBLIC_API_URL;
-
+    
     const response = await fetch(`${api_url}/register/`, {
         method: "POST",
         headers: {
@@ -20,20 +18,17 @@ const POST = async (req: Request) => {
             "Accept": "application/json",
         },
         body: JSON.stringify({
-            "nom": nom,
-            "prenom": prenom,
-            "adresse": adresse,
-            "mail": email,
-            "photo": "",
-            "tel": telephone,
-            "password": password
+            nom: nom,
+            prenom: prenom,
+            mail: email,
+            password: password,
+            tel: telephone,
+            adresse: adresse,
         }),
     });
 
-    console.log(response + "🪦")
-
     const data = await response.json();
-
+    
     if (response.ok) {
         return new Response(data, {
             status: 200,

@@ -1,24 +1,21 @@
-import { JWTPayload, jwtVerify } from "jose";
-
-export function getJwtSecretKey() {
-  const secret = process.env.NEXT_PUBLIC_JWT_SECRET_KEY;
-
-  if (!secret) {
-    throw new Error("JWT Secret key is not matched");
+const verifyJwtToken = async (token: string) => {
+  const payload = getPayload(token)
+  const exp = payload.exp
+  const now = Date.now() / 1000
+  if (now > exp) {
+    return false
   }
-
-  return new TextEncoder().encode(secret);
+  return true
 }
 
-export async function verifyJwtToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecretKey());
-
-    console.info("New payload: ", payload);
-
-    return payload;
-  } catch (error) {
-    console.error("error verifyJwtToken: ", error)
-    return null;
-  }
+const getPayload = (token: string) => {
+  const payload = token.split('.')[1]
+  return JSON.parse(atob(payload))
 }
+
+const getRoles = (token: string) => {
+  const payload = getPayload(token)
+  return payload.roles
+}
+
+export { verifyJwtToken, getPayload, getRoles };

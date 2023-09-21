@@ -18,6 +18,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { ReactNode, useState } from "react";
 import AdminAppBar from "./AdminAppBar";
 import { Drawer, DrawerHeader } from "./AdminDrawer";
@@ -118,6 +119,31 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Livreurs"
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+            <Link href="/admin/plat">
+              <ListItem disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <RestaurantIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="plats"
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItemButton>
