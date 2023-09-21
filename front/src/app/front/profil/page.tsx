@@ -7,10 +7,10 @@ import { useState } from "react";
 const utilisateurExample: Utilisateur = {
   nom: "Doe",
   prenom: "John",
-  image: undefined,
   telephone: "0600000000",
   email: "text@text.test",
   adresse: "1 rue de la paix",
+  photo: undefined,
 };
 
 const ProfilePage = () => {
