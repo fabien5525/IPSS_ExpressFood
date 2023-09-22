@@ -68,7 +68,7 @@ class Commande(models.Model):
     plats = models.ManyToManyField(Plat)
     prix_total = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    userlivreur = models.ForeignKey(Livreur, on_delete=models.CASCADE)
+    userlivreur = models.ForeignKey(Livreur, on_delete=models.CASCADE, null=True)
     etat = models.CharField(max_length=100)
 
     def __str__(self):
