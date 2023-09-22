@@ -43,7 +43,6 @@ const AddModal = (props: AddModalProps) => {
     }
 
     const payload = getPayload(token);
-    console.log(payload);
 
     const response = await fetch(`/api/deliveryman`, {
       method: "POST",
@@ -58,7 +57,6 @@ const AddModal = (props: AddModalProps) => {
       setOpen(false);
       fetchLivreurs();
     } else {
-      console.log(response);
     }
   };
 
