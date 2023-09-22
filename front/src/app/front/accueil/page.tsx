@@ -56,7 +56,10 @@ const AccueilPage = () => {
         setDishes={setCart}
       />
       <div className="pb-2 flex justify-between">
-        <div className="text-xs">Livrer maintenant</div>
+        <div>
+          <div className="text-xs">Livrer maintenant</div>
+          <div className="font-bold text-xs">{user?.adresse}</div>
+        </div>
         <div className="ml-2 flex items-center">
           <IconButton
             onClick={() => {
