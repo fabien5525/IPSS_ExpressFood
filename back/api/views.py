@@ -61,6 +61,15 @@ class CommandeViewSet(viewsets.ModelViewSet):
     serializer_class = CommandeSerializer
 
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        is_commande_user_param = self.request.query_params.get('is_commande_user', None)
+        if is_commande_user_param != None:
+            if is_commande_user_param == 'true':
+                queryset = queryset.filter(user=self.request.user)
+            else:
+                queryset = queryset.exclude(user=self.request.user)
+        return queryset
 
 class UserRegistrationView(views.APIView):
     permission_classes = (permissions.AllowAny,)
