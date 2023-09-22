@@ -2,7 +2,7 @@ import { utilisateurSimple } from "@/models/Utilisateur";
 
 const POST = async (req: Request) => {
 
-    const user = await req.json() as utilisateurSimple;
+    const user = await req.json();
 
     const api_url = process.env.NEXT_PUBLIC_API_URL;
     
@@ -19,6 +19,7 @@ const POST = async (req: Request) => {
             mail: user.mail,
             photo: user.photo,
             tel: user.tel,
+            password: user.password,
         }),
     });
 
