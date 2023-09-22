@@ -76,7 +76,7 @@ const EditModal = (props: EditModalProps) => {
         {livreur !== undefined && (
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Ajouter un livreur
+              Editer un livreur
             </Typography>
             <TextField
               label="Localisation"

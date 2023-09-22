@@ -1,10 +1,15 @@
-import {UtilisateurComplet, utilisateurSimple} from "@/models/Utilisateur";
+import { UtilisateurComplet, utilisateurSimple } from "@/models/Utilisateur";
 
 const GET = async (req: Request) => {
     const api_url = process.env.NEXT_PUBLIC_API_URL;
     const auth = req.headers.get("Authorization") ?? "";
 
-    const response = await fetch(`${api_url}/user/`, {
+    const url = new URL(req.url);
+    const is_livreur = url.searchParams.get("is_livreur");
+
+    console.log(is_livreur)
+
+    const response = await fetch(`${api_url}/user/${(is_livreur !== null) ? `?is_livreur=${is_livreur}` : ''}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -15,9 +20,10 @@ const GET = async (req: Request) => {
 
     if (response.ok) {
         const data = await response.json();
+        console.log(data)
 
-        const users : utilisateurSimple[] = data.map((user : UtilisateurComplet) => {
-            const clean_user : utilisateurSimple = {
+        const users: utilisateurSimple[] = data.map((user: UtilisateurComplet) => {
+            const clean_user: utilisateurSimple = {
                 id: user.id,
                 nom: user.nom,
                 prenom: user.prenom,
@@ -62,7 +68,7 @@ const PATCH = async (req: Request) => {
     if (response.ok) {
         const data = await response.json();
 
-        const user : utilisateurSimple = {
+        const user: utilisateurSimple = {
             id: data.id,
             nom: data.nom,
             prenom: data.prenom,

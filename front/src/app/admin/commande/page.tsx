@@ -1,28 +1,26 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import LivreurTable from "./LivreurTable";
-import Livreur from "@/models/Livreur";
+import CommandeTable from "./CommandeTable";
 import { useAuth } from "@/contexts/AppContext";
-import AddModal from "./AddModal";
 import { utilisateurSimple } from "@/models/Utilisateur";
 import EditModal from "./EditModal";
+import { CommandeComplet } from "@/models/Commande";
 
-const LivreurPage = () => {
-  const [livreurs, setLivreurs] = useState<Livreur[]>([]);
+const CommandePage = () => {
+  const [commandes, setCommandes] = useState<CommandeComplet[]>([]);
   const [limit, setLimit] = useState(10);
   const [userThatCanBeLivreur, setUserThatCanBeLivreur] = useState<
     utilisateurSimple[]
   >([]);
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [editLivreur, setEditLivreur] = useState<Livreur | undefined>(
+  const [editCommande, setEditCommande] = useState<CommandeComplet | undefined>(
     undefined
   );
   const { getToken } = useAuth();
 
-  const fetchLivreurs = useCallback(async () => {
+  const fetchCommandes = useCallback(async () => {
     const token = getToken();
-    const res = await fetch(`/api/deliveryman/`, {
+    const res = await fetch(`/api/order/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +34,7 @@ const LivreurPage = () => {
 
     const data = await res.json();
 
-    setLivreurs(data.data ?? []);
+    setCommandes(data.data ?? []);
   }, [getToken]);
 
   const fetchUsers = useCallback(async () => {
@@ -59,9 +57,9 @@ const LivreurPage = () => {
   }, [getToken]);
 
   useEffect(() => {
-    fetchLivreurs();
+    fetchCommandes();
     fetchUsers();
-  }, [fetchLivreurs, fetchUsers]);
+  }, [fetchCommandes, fetchUsers]);
 
   const handleDelete = async (id: number) => {
     if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
@@ -78,34 +76,27 @@ const LivreurPage = () => {
         return;
       }
 
-      await fetchLivreurs();
+      await fetchCommandes();
     }
   };
 
   return (
     <main className="p-4">
-      <AddModal
-        open={openAddModal}
-        setOpen={setOpenAddModal}
-        fetchLivreurs={fetchLivreurs}
-        userThatCanBeLivreur={userThatCanBeLivreur}
-      />
       <EditModal
-        livreur={editLivreur}
-        setLivreur={setEditLivreur}
-        fetchLivreurs={fetchLivreurs}
+        commande={editCommande}
+        setCommande={setEditCommande}
+        fetchCommandes={fetchCommandes}
         userThatCanBeLivreur={userThatCanBeLivreur}
       />
-      <LivreurTable
-        livreurs={livreurs}
+      <CommandeTable
+        commandes={commandes}
         limit={limit}
         setLimit={setLimit}
         handleDelete={handleDelete}
-        setOpenAddModal={setOpenAddModal}
-        setEditLivreur={setEditLivreur}
+        setEditCommande={setEditCommande}
       />
     </main>
   );
 };
 
-export default LivreurPage;
+export default CommandePage;
