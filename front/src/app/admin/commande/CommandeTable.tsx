@@ -11,34 +11,28 @@ import {
   IconButton,
   Link,
   TextField,
+  Tab,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { utilisateurSimple } from "@/models/Utilisateur";
+import { CommandeComplet, CommandeSimple } from "@/models/Commande";
 import { useState } from "react";
 
-interface UtilisateurTableProps {
-  utilisateurs: utilisateurSimple[];
-  setUtilisateurs: (utilisateurs: utilisateurSimple[]) => void;
+interface CommandeTableProps {
+  commandes: CommandeComplet[];
   limit: number;
   setLimit: (limit: number) => void;
   handleDelete: (id: number) => void;
-  setEditUser: (utilisateur: utilisateurSimple | undefined) => void;
+  setEditCommande: (commande: CommandeComplet) => void;
 }
 
-const UtilisateurTable = (props: UtilisateurTableProps) => {
-  const { utilisateurs, limit, setLimit, handleDelete, setEditUser } = props;
+const CommandeTable = (props: CommandeTableProps) => {
+  const { commandes, limit, setLimit, handleDelete, setEditCommande } = props;
 
   const [search, setSearch] = useState("");
 
-  const filteredUtilisateurs = utilisateurs.filter((utilisateur) => {
-    return (
-      utilisateur.nom.includes(search) ||
-      utilisateur.prenom.includes(search) ||
-      utilisateur.mail.includes(search) ||
-      utilisateur.tel.includes(search) ||
-      utilisateur.adresse.includes(search)
-    );
+  const filteredCommandes = commandes.filter((commande) => {
+    return commande.prix_total.toString().includes(search);
   });
 
   return (
@@ -46,16 +40,20 @@ const UtilisateurTable = (props: UtilisateurTableProps) => {
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell colSpan={2}>Utilisateurs</TableCell>
-            <TableCell colSpan={3}>
+            <TableCell colSpan={1}>Commandes</TableCell>
+            <TableCell colSpan={1}>
               <TextField
                 variant="outlined"
-                placeholder="Rechercher un utilisateur"
+                placeholder="Rechercher un commande"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </TableCell>
-            <TableCell colSpan={2} className="flex justify-end">
+            <TableCell colSpan={1} className="flex justify-end">
+              {/* <IconButton onClick={() => setOpenAddModal(true)}>
+                <AddIcon />
+              </IconButton> */}
+
               <Select
                 className="mx-2"
                 value={limit}
@@ -70,33 +68,27 @@ const UtilisateurTable = (props: UtilisateurTableProps) => {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Nom</TableCell>
-            <TableCell>Prénom</TableCell>
-            <TableCell>e-mail</TableCell>
-            <TableCell>téléphone</TableCell>
-            <TableCell>adresse</TableCell>
+            <TableCell>#</TableCell>
+            <TableCell></TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredUtilisateurs.length === 0 && (
+          {filteredCommandes.length === 0 && (
             <TableRow>
-              <TableCell colSpan={6}>Aucun utilisateur</TableCell>
+              <TableCell colSpan={6}>Aucun commande</TableCell>
             </TableRow>
           )}
-          {filteredUtilisateurs.map((utilisateur, index) => {
+          {filteredCommandes.map((commande, index) => {
             return (
               <TableRow key={index}>
-                <TableCell>{utilisateur.nom}</TableCell>
-                <TableCell>{utilisateur.prenom}</TableCell>
-                <TableCell>{utilisateur.mail}</TableCell>
-                <TableCell>{utilisateur.tel}</TableCell>
-                <TableCell>{utilisateur.adresse}</TableCell>
+                <TableCell>{commande.id}</TableCell>
+                <TableCell></TableCell>
                 <TableCell>
-                  <IconButton onClick={() => setEditUser(utilisateur)}>
+                  <IconButton onClick={() => setEditCommande(commande)}>
                     <EditIcon className="text-blue-500" />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(utilisateur.id)}>
+                  <IconButton onClick={() => handleDelete(commande.id)}>
                     <DeleteIcon className="text-red-600" />
                   </IconButton>
                 </TableCell>
@@ -109,4 +101,4 @@ const UtilisateurTable = (props: UtilisateurTableProps) => {
   );
 };
 
-export default UtilisateurTable;
+export default CommandeTable;

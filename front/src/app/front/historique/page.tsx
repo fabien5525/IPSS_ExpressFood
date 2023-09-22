@@ -1,21 +1,47 @@
 "use client";
 
 import { Paper, Skeleton } from "@mui/material";
-import { useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-
-interface commande {
-  id: string;
-  id_plat: number;
-  nb_plat: number;
-  prix_total: number;
-  image: undefined | string;
-}
+import { useAuth } from "@/contexts/AppContext";
+import { getPayload } from "@/libs/auth";
+import { CommandeComplet } from "@/models/Commande";
 
 interface HistoryPageProps {}
 
 const HistoryPage = (props: HistoryPageProps) => {
-  const [commandes, setCommandes] = useState<commande[]>([]);
+  const [commandes, setCommandes] = useState<CommandeComplet[]>([]);
+  const { getToken } = useAuth();
+
+  const fetchOrders = useCallback(async () => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    }
+
+    const { id } = getPayload(token);
+
+    const res = await fetch(`/api/order/?user=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      return;
+    }
+
+    const data = await res.json();
+
+    setCommandes(data.data ?? []);
+  }, [getToken]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   return (
     <main className="py-4">
@@ -26,26 +52,20 @@ const HistoryPage = (props: HistoryPageProps) => {
         <div className="flex flex-col">
           {commandes.map((commande) => {
             return (
-              <Paper key={commande.id} elevation={4} className="flex flex-row mt-4">
-                <div className="w-24 p-4">
-                  {commande.image ? (
-                    <Image
-                      className="rounded-full w-full"
-                      width={64}
-                      height={64}
-                      src={commande.image}
-                      alt=""
-                    />
-                  ) : (
-                    <Skeleton
-                      className="w-full"
-                      variant="circular"
-                      width={64}
-                      height={64}
-                    />
-                  )}
+              <Paper
+                key={commande.id}
+                elevation={4}
+                className="flex flex-col mt-4 p-4"
+              >
+                <div className="w-full text-start ">
+                  <p className="font-bold">{`#${commande.id}`}</p>
                 </div>
-                <div className="w-full text-end p-4">
+                <hr className="mb-2 border-t-2" />
+                <div className="w-full flex flex-row justify-between">
+                  <span>État:</span>
+                  <span>{commande.etat}</span>
+                </div>
+                <div className="w-full text-end">
                   <p>{commande.prix_total}€</p>
                 </div>
               </Paper>

@@ -67,7 +67,7 @@ const EditModal = (props: EditModalProps) => {
         {plat !== undefined && (
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Editer un utilisateur
+              Editer un plat
             </Typography>
             <TextField
               label="Nom"
