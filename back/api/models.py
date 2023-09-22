@@ -8,7 +8,7 @@ class Plat(models.Model):
     dujour = models.BooleanField(default=False)
     dessert = models.BooleanField(default=False)
     prix = models.IntegerField()
-    ingredient = models.CharField(max_length=100)
+    ingredient = models.CharField(max_length=1024)
     nom = models.CharField(max_length=100)
     image = models.ImageField(upload_to='images/', null=True)
 

@@ -4,24 +4,30 @@ from django.db import migrations
 
 def add_default_users(apps, schema_editor):
     User = apps.get_model('api', 'User')
-    User.objects.create(
-        nom='Michel',
-        prenom='exemple',
-        adresse='4 rue de la paix',
-        mail='email1@example.com',
+
+    user1 = User.objects.create(
+        nom="ccdc",
+        prenom="fabien",
+        adresse="4 rue de la paix",
+        mail="fabien@fabien.fr",
         photo="",
-        tel='1234567891',
-        password="$2b$12$1jzTWSVNlOvfjvu3jkCMVuT1sfhMODdmJEtfTiMN/VPO82Px90qNa",
+        tel="1234567890",
+        password="$2a$12$Q8fxQFuFP/XoObZpStdvw.lAkVJMmc6yf7bLSX2oX2ovYQsrKaqeO",
+        username="fabien@fabien.fr",
     )
+    user1.roles.add(1)
+    user1.roles.add(3)
+    user1.save()
     
     User.objects.create(
         nom='Kevin',
         prenom='autre',
         adresse='5 avenue de paris',
-        mail='email2@example.com',
+        mail='email1@example.com',
         photo="",
         tel='1234567892',
         password='motdepassepardefaut2',
+        username="email1@example.com",
     )
 
     User.objects.create(
@@ -32,26 +38,29 @@ def add_default_users(apps, schema_editor):
         photo="",
         tel='1234567893',
         password='motdepassepardefaut3',
+        username='email2@example.com',
     )
 
     User.objects.create(
         nom='Valentin',
         prenom='david',
         adresse='Adresse par défaut 4',
-        mail='email2@example.com',
+        mail='email3@example.com',
         photo="",
         tel='1234567894',
         password='motdepassepardefaut4',
+        username='email3@example.com',
     )
 
     User.objects.create(
         nom='hugo',
         prenom='louis',
         adresse='Adresse par défaut 5',
-        mail='email2@example.com',
+        mail='email4@example.com',
         photo="",
         tel='1234567895',
         password='motdepassepardefaut5',
+        username='email4@example.com',
     )
 
 
@@ -61,7 +70,7 @@ def add_default_plats(apps, schema_editor):
         dujour=False,
         dessert=False,
         prix=10,  
-        ingredient=['patte', 'beurre'],        
+        ingredient='patte, beurre',        
         nom='patte au beurre',
         image="",
         id=1,
@@ -107,62 +116,19 @@ def add_default_plats(apps, schema_editor):
         id=5,
     )
 
-    Plat.objects.create(
-        dujour=False,
-        dessert=False,
-        prix=10,
-        ingredient='knaki, beurre, lait, sel, poivre, pomme de terre, eau',
-        nom='purée knaki',
-        image="",
-        id=5,
-    )
-
-
-def add_default_commandes(apps, schema_editor):
-    Commande = apps.get_model('api', 'Commande') 
-    Commande.objects.create(
-        prix_total=0, 
-        id_client=1,
-        id_livreurs=2,
-        id_plats=[1,1,1,1,4,4,4,4],
-        etat='livré',
-    )
-
-    Commande.objects.create(
-        prix_total=0, 
-        id_client=1,
-        id_livreurs=2,
-        id_plats=[1,1,1,1,4,4,4,4], 
-        etat='livré',
-    )
-
-    Commande.objects.create(
-        prix_total=0, 
-        id_client=1,
-        id_livreurs=2,
-        id_plats=[1,1,1,1,4,4,4,4], 
-        etat='livré',
-    )
-
-    Commande.objects.create(
-        prix_total=0, 
-        id_client=3,
-        id_livreurs=2,
-        id_plats=[5,5,5,5,5,5,5,5,2,2], 
-        etat='livré',
-    )
-
 
 def add_default_livreurs(apps, schema_editor):
     Livreur = apps.get_model('api', 'Livreur') 
+    User = apps.get_model('api', 'User')
+
     Livreur.objects.create(
-        id_user=5,
+        user=User.objects.get(pk=1),
         localisation="rue de la gare",
-        status="occuper",
+        status="libre",
     )
 
     Livreur.objects.create(
-        id_user=4,
+        user=User.objects.get(pk=2),
         localisation="rue de la paix",
         status="libre",
     )
@@ -176,6 +142,5 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(add_default_plats),
         migrations.RunPython(add_default_users),
-        migrations.RunPython(add_default_commandes),
         migrations.RunPython(add_default_livreurs),
     ]

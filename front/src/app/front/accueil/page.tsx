@@ -4,23 +4,17 @@ import { IconButton, Paper, Skeleton, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AppContext";
-import AddIcon from '@mui/icons-material/Add';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
-interface Plat {
-  id: number;
-  dujour: boolean;
-  dessert: boolean;
-  prix: number;
-  ingredients: any[];
-  nom: string;
-  image: string | undefined;
-}
+import AddIcon from "@mui/icons-material/Add";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import OpenCartModal from "./CartModal";
+import Plat from "@/models/Plat";
 
 const AccueilPage = () => {
   const [plats, setPlats] = useState<Plat[]>([]);
   const [filter, setFilter] = useState("");
-  const { user, getToken } = useAuth(); 
+  const { user, getToken } = useAuth();
+
+  const [openCartModal, setOpenCartModal] = useState(false);
 
   const fetchDishes = useCallback(async () => {
     const token = getToken();
@@ -28,7 +22,7 @@ const AccueilPage = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -43,8 +37,7 @@ const AccueilPage = () => {
 
   useEffect(() => {
     fetchDishes();
-  }, [fetchDishes])
-
+  }, [fetchDishes]);
 
   const [cart, setCart] = useState<Plat[]>([]);
   const addToCart = (plat: Plat) => {
@@ -56,12 +49,24 @@ const AccueilPage = () => {
 
   return (
     <main className="p-2 min-h-[100dvh]">
+      <OpenCartModal
+        open={openCartModal}
+        setOpen={setOpenCartModal}
+        dishes={cart}
+        setDishes={setCart}
+      />
       <div className="pb-2 flex justify-between">
-        <div className="text-xs">
-          Livrer maintenant
-        </div>
+        <div className="text-xs">Livrer maintenant</div>
         <div className="ml-2 flex items-center">
-          <ShoppingCartIcon />
+          <IconButton
+            onClick={() => {
+              if (cart.length > 0) {
+                setOpenCartModal(true);
+              }
+            }}
+          >
+            <ShoppingCartIcon />
+          </IconButton>
           <span className="text-xs font-bold">{cart.length}</span>
         </div>
       </div>
@@ -97,9 +102,11 @@ const AccueilPage = () => {
                 <span className="font-bold text-bold">{plat.nom}</span>
                 <span>{plat.prix}€</span>
               </div>
-              <IconButton onClick={() => addToCart(plat)}>
-                      <AddIcon />
-              </IconButton>
+              <div className="text-center w-full">
+                <IconButton onClick={() => addToCart(plat)}>
+                  <AddIcon />
+                </IconButton>
+              </div>
             </Paper>
           );
         })}
