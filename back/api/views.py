@@ -10,16 +10,43 @@ from rest_framework.response import Response
 from rest_framework.response import Response
 from api.authentification import JWTAuthentication
 
+#  def get_queryset(self):
+#         queryset = super().get_queryset()
+#         search_param = self.request.query_params.get('search', None)
+#         if search_param:
+#             # Filtrer les plats qui contiennent la chaîne de recherche dans le nom ou les ingrédients
+#             queryset = queryset.filter(Q(nom__icontains=search_param) | Q(ingredient__icontains=search_param))
+#         return queryset
+    
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
+# class UserViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.exclude(id__in=Livreur.objects.values('user'))
+#     serializer_class = UserSerializer
+# 
+
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 class PlatViewSet(viewsets.ModelViewSet):
     queryset = Plat.objects.all()
     serializer_class = PlatSerializer
+
+
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        is_livreur_param = self.request.query_params.get('is_livreur', None)
+        if is_livreur_param != None:
+            if is_livreur_param == 'true':
+                queryset = queryset.filter(id__in=Livreur.objects.values('user'))
+            else:
+                queryset = queryset.exclude(id__in=Livreur.objects.values('user'))
+        return queryset
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])

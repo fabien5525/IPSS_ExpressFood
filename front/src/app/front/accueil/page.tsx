@@ -1,9 +1,11 @@
 "use client";
 
-import { Paper, Skeleton, TextField } from "@mui/material";
+import { IconButton, Paper, Skeleton, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AppContext";
+import AddIcon from '@mui/icons-material/Add';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 interface Plat {
   id: number;
@@ -43,11 +45,25 @@ const AccueilPage = () => {
     fetchDishes();
   }, [fetchDishes])
 
+
+  const [cart, setCart] = useState<Plat[]>([]);
+  const addToCart = (plat: Plat) => {
+    if (cart.find((p) => p.id === plat.id)) {
+      return;
+    }
+    setCart([...cart, plat]);
+  };
+
   return (
     <main className="p-2 min-h-[100dvh]">
-      <div className="pb-2">
-        <p className="text-xs">Livrer maintenant</p>
-        <p className="text-xs font-bold">{user?.adresse}</p>
+      <div className="pb-2 flex justify-between">
+        <div className="text-xs">
+          Livrer maintenant
+        </div>
+        <div className="ml-2 flex items-center">
+          <ShoppingCartIcon />
+          <span className="text-xs font-bold">{cart.length}</span>
+        </div>
       </div>
       <input
         type="text"
@@ -81,6 +97,9 @@ const AccueilPage = () => {
                 <span className="font-bold text-bold">{plat.nom}</span>
                 <span>{plat.prix}€</span>
               </div>
+              <IconButton onClick={() => addToCart(plat)}>
+                      <AddIcon />
+              </IconButton>
             </Paper>
           );
         })}
